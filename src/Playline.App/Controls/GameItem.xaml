@@ -1,0 +1,206 @@
+<UserControl x:Class="Playline.App.Controls.GameItem"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:automation="clr-namespace:System.Windows.Automation;assembly=PresentationCore"
+             mc:Ignorable="d"
+             d:DesignHeight="56"
+             d:DesignWidth="148"
+             Width="56"
+             Height="56"
+             Focusable="False">
+    <Grid>
+        <Button x:Name="ItemButton"
+            Style="{StaticResource PlaylineGameButtonStyle}"
+            HorizontalContentAlignment="Left"
+            ToolTipService.InitialShowDelay="250"
+            ToolTipService.ShowDuration="5000"
+            PreviewMouseLeftButtonDown="ItemButton_PreviewMouseLeftButtonDown"
+            PreviewMouseMove="ItemButton_PreviewMouseMove"
+            PreviewMouseLeftButtonUp="ItemButton_PreviewMouseLeftButtonUp"
+            Click="ItemButton_Click">
+        <Button.ContextMenu>
+            <ContextMenu Style="{StaticResource PlaylineContextMenuStyle}">
+                <MenuItem Header="Abrir"
+                          Style="{StaticResource PlaylineMenuItemStyle}"
+                          automation:AutomationProperties.AutomationId="OpenGameMenuItem"
+                          Click="OpenMenuItem_Click" />
+                <MenuItem Header="Editar"
+                          Style="{StaticResource PlaylineMenuItemStyle}"
+                          automation:AutomationProperties.AutomationId="EditGameMenuItem"
+                          Click="EditMenuItem_Click" />
+                <MenuItem x:Name="FavoriteMenuItem"
+                          Header="Favoritar"
+                          Style="{StaticResource PlaylineMenuItemStyle}"
+                          automation:AutomationProperties.AutomationId="FavoriteGameMenuItem"
+                          Click="FavoriteMenuItem_Click" />
+                <MenuItem x:Name="MoveBackwardMenuItem"
+                          Header="Mover para a esquerda"
+                          Style="{StaticResource PlaylineMenuItemStyle}"
+                          automation:AutomationProperties.AutomationId="MoveGameLeftMenuItem"
+                          Click="MoveLeftMenuItem_Click" />
+                <MenuItem x:Name="MoveForwardMenuItem"
+                          Header="Mover para a direita"
+                          Style="{StaticResource PlaylineMenuItemStyle}"
+                          automation:AutomationProperties.AutomationId="MoveGameRightMenuItem"
+                          Click="MoveRightMenuItem_Click" />
+                <Separator Style="{StaticResource PlaylineSeparatorStyle}" />
+                <MenuItem Header="Remover"
+                          Style="{StaticResource PlaylineMenuItemStyle}"
+                          automation:AutomationProperties.AutomationId="RemoveGameMenuItem"
+                          Click="RemoveMenuItem_Click" />
+            </ContextMenu>
+        </Button.ContextMenu>
+
+        <Grid x:Name="ContentGrid">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Grid x:Name="IconHost"
+                  Width="40"
+                  Height="40"
+                  RenderTransformOrigin="0.5,0.5">
+                <Grid.RenderTransform>
+                    <ScaleTransform x:Name="IconScaleTransform"
+                                    ScaleX="1"
+                                    ScaleY="1" />
+                </Grid.RenderTransform>
+                <Grid.Triggers>
+                    <EventTrigger RoutedEvent="Mouse.MouseEnter">
+                        <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetName="IconScaleTransform"
+                                                 Storyboard.TargetProperty="ScaleX"
+                                                 To="1.045"
+                                                 Duration="0:0:0.14">
+                                    <DoubleAnimation.EasingFunction>
+                                        <CubicEase EasingMode="EaseOut" />
+                                    </DoubleAnimation.EasingFunction>
+                                </DoubleAnimation>
+                                <DoubleAnimation Storyboard.TargetName="IconScaleTransform"
+                                                 Storyboard.TargetProperty="ScaleY"
+                                                 To="1.045"
+                                                 Duration="0:0:0.14">
+                                    <DoubleAnimation.EasingFunction>
+                                        <CubicEase EasingMode="EaseOut" />
+                                    </DoubleAnimation.EasingFunction>
+                                </DoubleAnimation>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                    <EventTrigger RoutedEvent="Mouse.MouseLeave">
+                        <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetName="IconScaleTransform"
+                                                 Storyboard.TargetProperty="ScaleX"
+                                                 To="1"
+                                                 Duration="0:0:0.16">
+                                    <DoubleAnimation.EasingFunction>
+                                        <CubicEase EasingMode="EaseOut" />
+                                    </DoubleAnimation.EasingFunction>
+                                </DoubleAnimation>
+                                <DoubleAnimation Storyboard.TargetName="IconScaleTransform"
+                                                 Storyboard.TargetProperty="ScaleY"
+                                                 To="1"
+                                                 Duration="0:0:0.16">
+                                    <DoubleAnimation.EasingFunction>
+                                        <CubicEase EasingMode="EaseOut" />
+                                    </DoubleAnimation.EasingFunction>
+                                </DoubleAnimation>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </Grid.Triggers>
+                <Grid.Effect>
+                    <DropShadowEffect BlurRadius="8"
+                                      Direction="270"
+                                      Opacity="0.3"
+                                      ShadowDepth="2"
+                                      Color="#FF000000" />
+                </Grid.Effect>
+                <Border x:Name="PlaceholderSurface"
+                        Background="{StaticResource PlaylineSurfaceBrush}"
+                        BorderBrush="{StaticResource PlaylineBorderBrush}"
+                        BorderThickness="1"
+                        CornerRadius="8">
+                    <TextBlock x:Name="InitialText"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               Foreground="{StaticResource PlaylineTextBrush}"
+                               FontSize="17"
+                               FontWeight="SemiBold"
+                               Text="?" />
+                </Border>
+                <Border x:Name="IconSurface"
+                        Background="{StaticResource PlaylineSurfaceBrush}"
+                        BorderBrush="{StaticResource PlaylineBorderBrush}"
+                        BorderThickness="1"
+                        CornerRadius="12"
+                        RenderOptions.BitmapScalingMode="HighQuality"
+                        RenderOptions.EdgeMode="Unspecified"
+                        Visibility="Collapsed" />
+                <Border x:Name="IconHighlight"
+                        BorderBrush="#68FFFFFF"
+                        BorderThickness="1,1,0,0"
+                        CornerRadius="12"
+                        IsHitTestVisible="False" />
+                <Border x:Name="FavoriteIndicator"
+                        Width="16"
+                        Height="16"
+                        Margin="0,-4,-4,0"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top"
+                        Background="{StaticResource PlaylineWindowBrush}"
+                        BorderBrush="{StaticResource PlaylineAccentBrush}"
+                        BorderThickness="1"
+                        CornerRadius="8"
+                        Visibility="Collapsed">
+                    <TextBlock HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               Foreground="{StaticResource PlaylineAccentBrush}"
+                               FontSize="9"
+                               Text="★" />
+                </Border>
+                <Border x:Name="InvalidIndicator"
+                        Width="15"
+                        Height="15"
+                        Margin="0,0,-3,-3"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Bottom"
+                        Background="#FFD78B39"
+                        CornerRadius="8"
+                        Visibility="Collapsed">
+                    <TextBlock HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               Foreground="White"
+                               FontSize="10"
+                               FontWeight="Bold"
+                               Text="!" />
+                </Border>
+            </Grid>
+
+            <TextBlock x:Name="NameText"
+                       Grid.Column="1"
+                       Margin="9,0,4,0"
+                       VerticalAlignment="Center"
+                       Foreground="{StaticResource PlaylineTextBrush}"
+                       FontSize="13"
+                       FontWeight="SemiBold"
+                       TextTrimming="CharacterEllipsis"
+                       Visibility="Collapsed" />
+        </Grid>
+        </Button>
+
+        <Border x:Name="ItemSeparator"
+                Width="1"
+                Height="34"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                Background="{StaticResource PlaylineInnerBorderBrush}"
+                IsHitTestVisible="False"
+                Opacity="0.72" />
+    </Grid>
+</UserControl>

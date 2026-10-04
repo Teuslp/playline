@@ -1,0 +1,76 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Color x:Key="PlaylineWindowColor">#00000000</Color>
+    <Color x:Key="PlaylineSurfaceColor">#9A121216</Color>
+    <Color x:Key="PlaylineHoverColor">#1EFFFFFF</Color>
+    <Color x:Key="PlaylinePressedColor">#28FFFFFF</Color>
+    <Color x:Key="PlaylineBorderColor">#58FFFFFF</Color>
+    <Color x:Key="PlaylineInnerBorderColor">#32FFFFFF</Color>
+    <Color x:Key="PlaylinePopupColor">#F218181C</Color>
+    <Color x:Key="PlaylineSelectionColor">#2EFFFFFF</Color>
+    <Color x:Key="PlaylineTextColor">#FFF7FBFF</Color>
+    <Color x:Key="PlaylineSecondaryTextColor">#FFC8C8CD</Color>
+    <Color x:Key="PlaylineAccentColor">#FFF1F1F4</Color>
+    <Color x:Key="PlaylineMenuDotColor">#FFF5F5F7</Color>
+
+    <LinearGradientBrush x:Key="PlaylineWindowBrush"
+                         StartPoint="0,0"
+                         EndPoint="1,1">
+        <GradientStop Offset="0" Color="#24FFFFFF" />
+        <GradientStop Offset="0.18" Color="#12FFFFFF" />
+        <GradientStop Offset="0.52" Color="#08FFFFFF" />
+        <GradientStop Offset="0.8" Color="#04000000" />
+        <GradientStop Offset="1" Color="#1CFFFFFF" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="PlaylineGlassGlowBrush"
+                         StartPoint="0,0"
+                         EndPoint="0,1">
+        <GradientStop Offset="0" Color="#28FFFFFF" />
+        <GradientStop Offset="0.16" Color="#12FFFFFF" />
+        <GradientStop Offset="0.54" Color="#04FFFFFF" />
+        <GradientStop Offset="1" Color="#00000000" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="PlaylineDiagonalSheenBrush"
+                         StartPoint="0,0"
+                         EndPoint="1,1">
+        <GradientStop Offset="0" Color="#16FFFFFF" />
+        <GradientStop Offset="0.44" Color="#08FFFFFF" />
+        <GradientStop Offset="1" Color="#00FFFFFF" />
+    </LinearGradientBrush>
+    <DrawingBrush x:Key="PlaylinePanelSheenBrush"
+                  Stretch="Fill"
+                  Viewbox="0,0,1,1"
+                  ViewboxUnits="Absolute"
+                  Viewport="0,0,1,1"
+                  ViewportUnits="RelativeToBoundingBox">
+        <DrawingBrush.Drawing>
+            <GeometryDrawing Brush="#0EFFFFFF"
+                             Geometry="M 0.89,0 L 1,0 L 1,1 L 0.75,1 Z" />
+        </DrawingBrush.Drawing>
+    </DrawingBrush>
+    <SolidColorBrush x:Key="PlaylineSurfaceBrush"
+                     Color="{StaticResource PlaylineSurfaceColor}" />
+    <SolidColorBrush x:Key="PlaylineHoverBrush"
+                     Color="{StaticResource PlaylineHoverColor}" />
+    <SolidColorBrush x:Key="PlaylinePressedBrush"
+                     Color="{StaticResource PlaylinePressedColor}" />
+    <SolidColorBrush x:Key="PlaylineBorderBrush"
+                     Color="{StaticResource PlaylineBorderColor}" />
+    <SolidColorBrush x:Key="PlaylineInnerBorderBrush"
+                     Color="{StaticResource PlaylineInnerBorderColor}" />
+    <SolidColorBrush x:Key="PlaylinePopupBrush"
+                     Color="{StaticResource PlaylinePopupColor}" />
+    <SolidColorBrush x:Key="PlaylineSelectionBrush"
+                     Color="{StaticResource PlaylineSelectionColor}" />
+    <SolidColorBrush x:Key="PlaylineTextBrush"
+                     Color="{StaticResource PlaylineTextColor}" />
+    <SolidColorBrush x:Key="PlaylineSecondaryTextBrush"
+                     Color="{StaticResource PlaylineSecondaryTextColor}" />
+    <SolidColorBrush x:Key="PlaylineAccentBrush"
+                     Color="{StaticResource PlaylineAccentColor}" />
+    <SolidColorBrush x:Key="PlaylineMenuDotBrush"
+                     Color="{StaticResource PlaylineMenuDotColor}"
+                     Opacity="0.84" />
+    <SolidColorBrush x:Key="PlaylineLowerRimBrush"
+                     Color="#28FFFFFF" />
+</ResourceDictionary>

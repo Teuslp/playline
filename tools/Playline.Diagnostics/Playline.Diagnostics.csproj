@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Playline.Core\Playline.Core.csproj" />
+    <ProjectReference Include="..\..\src\Playline.Discovery\Playline.Discovery.csproj" />
+    <ProjectReference Include="..\..\src\Playline.Storage\Playline.Storage.csproj" />
+    <ProjectReference Include="..\..\src\Playline.Windows\Playline.Windows.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>

@@ -1,0 +1,48 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\Playline.Core\Playline.Core.csproj" />
+    <ProjectReference Include="..\Playline.Storage\Playline.Storage.csproj" />
+    <ProjectReference Include="..\Playline.Windows\Playline.Windows.csproj" />
+    <ProjectReference Include="..\Playline.Discovery\Playline.Discovery.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Remove="System.Drawing" />
+    <Using Remove="System.Windows.Forms" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <AssemblyName>Playline</AssemblyName>
+    <RootNamespace>Playline.App</RootNamespace>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <PlatformTarget>x64</PlatformTarget>
+    <SelfContained>false</SelfContained>
+    <Product>Playline</Product>
+    <Description>Barra compacta e leve para organizar e iniciar jogos no Windows.</Description>
+    <Company>Playline contributors</Company>
+    <Copyright>Copyright © 2026 Playline contributors</Copyright>
+    <Version>0.9.0-beta</Version>
+    <AssemblyVersion>0.9.0.0</AssemblyVersion>
+    <FileVersion>0.9.0.0</FileVersion>
+    <InformationalVersion>0.9.0-beta</InformationalVersion>
+    <ApplicationIcon>Assets\playline-placeholder.ico</ApplicationIcon>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationHighDpiMode>PerMonitorV2</ApplicationHighDpiMode>
+    <PublishTrimmed>false</PublishTrimmed>
+    <PublishSingleFile>false</PublishSingleFile>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Update="Assets\playline-placeholder.png"
+          CopyToOutputDirectory="Never"
+          CopyToPublishDirectory="Never" />
+  </ItemGroup>
+
+</Project>

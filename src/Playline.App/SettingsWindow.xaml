@@ -1,0 +1,147 @@
+<Window x:Class="Playline.App.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:automation="clr-namespace:System.Windows.Automation;assembly=PresentationCore"
+        Title="Configurações do Playline"
+        Width="460"
+        Height="610"
+        ResizeMode="NoResize"
+        ShowInTaskbar="False"
+        WindowStartupLocation="CenterOwner"
+        Background="{StaticResource PlaylineWindowBrush}">
+    <Window.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource PlaylineTextBrush}" />
+        </Style>
+        <Style TargetType="CheckBox">
+            <Setter Property="Margin" Value="0,6" />
+            <Setter Property="Foreground" Value="{StaticResource PlaylineTextBrush}" />
+        </Style>
+        <Style TargetType="ComboBox"
+               BasedOn="{StaticResource PlaylineComboBoxStyle}" />
+    </Window.Resources>
+
+    <Grid Margin="22">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock FontSize="20"
+                   FontWeight="SemiBold"
+                   Text="Configurações" />
+        <TextBlock Grid.Row="1"
+                   Margin="0,4,0,18"
+                   Foreground="{StaticResource PlaylineSecondaryTextBrush}"
+                   Text="Ajustes leves para o uso diário da barra." />
+
+        <StackPanel Grid.Row="2">
+            <TextBlock Margin="0,0,0,10"
+                       Foreground="{StaticResource PlaylineAccentBrush}"
+                       FontSize="14"
+                       FontWeight="SemiBold"
+                       Text="Aparência" />
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="190" />
+                </Grid.ColumnDefinitions>
+                <TextBlock VerticalAlignment="Center" Text="Modo de exibição" />
+                <ComboBox x:Name="DisplayModeComboBox"
+                          Grid.Column="1"
+                          automation:AutomationProperties.Name="Modo de exibição"
+                          automation:AutomationProperties.AutomationId="SettingsDisplayMode" />
+            </Grid>
+
+            <Grid Margin="0,10,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="190" />
+                </Grid.ColumnDefinitions>
+                <TextBlock VerticalAlignment="Center" Text="Tamanho dos itens" />
+                <ComboBox x:Name="ItemSizeComboBox"
+                          Grid.Column="1"
+                          automation:AutomationProperties.Name="Tamanho dos itens"
+                          automation:AutomationProperties.AutomationId="SettingsItemSize" />
+            </Grid>
+
+            <Grid Margin="0,10,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="190" />
+                </Grid.ColumnDefinitions>
+                <TextBlock VerticalAlignment="Center" Text="Orientação da barra" />
+                <ComboBox x:Name="BarOrientationComboBox"
+                          Grid.Column="1"
+                          automation:AutomationProperties.Name="Orientação da barra"
+                          automation:AutomationProperties.AutomationId="SettingsBarOrientation" />
+            </Grid>
+
+            <Separator Margin="0,18,0,16"
+                       Style="{StaticResource PlaylineSeparatorStyle}" />
+
+            <TextBlock Margin="0,0,0,7"
+                       Foreground="{StaticResource PlaylineAccentBrush}"
+                       FontSize="14"
+                       FontWeight="SemiBold"
+                       Text="Comportamento" />
+
+            <CheckBox x:Name="AlwaysOnTopCheckBox"
+                      Content="Manter sempre visível sobre outras janelas"
+                      automation:AutomationProperties.AutomationId="SettingsAlwaysOnTop" />
+            <CheckBox x:Name="StartWithWindowsCheckBox"
+                      Content="Iniciar com o Windows"
+                      automation:AutomationProperties.AutomationId="SettingsStartWithWindows" />
+            <CheckBox x:Name="AutoHideCheckBox"
+                      Content="Ocultar automaticamente ao perder o foco"
+                      automation:AutomationProperties.AutomationId="SettingsAutoHide" />
+            <CheckBox x:Name="RestorePositionCheckBox"
+                      Content="Restaurar a última posição da barra"
+                      automation:AutomationProperties.AutomationId="SettingsRestorePosition" />
+            <CheckBox x:Name="LockPositionCheckBox"
+                      Content="Fixar a posição da barra"
+                      automation:AutomationProperties.AutomationId="SettingsLockPosition" />
+
+            <Grid Margin="0,10,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="190" />
+                </Grid.ColumnDefinitions>
+                <TextBlock VerticalAlignment="Center" Text="Após iniciar um jogo" />
+                <ComboBox x:Name="AfterLaunchComboBox"
+                          Grid.Column="1"
+                          automation:AutomationProperties.Name="Ação após iniciar um jogo"
+                          automation:AutomationProperties.AutomationId="SettingsAfterLaunch" />
+            </Grid>
+        </StackPanel>
+
+        <TextBlock Grid.Row="3"
+                   Margin="0,18,0,0"
+                   VerticalAlignment="Top"
+                   Foreground="{StaticResource PlaylineSecondaryTextBrush}"
+                   FontSize="11"
+                   TextWrapping="Wrap"
+                   Text="Ocultar e minimizar mantêm o Playline acessível pelo ícone na área de notificação. A posição só é gravada ao terminar de mover a barra." />
+
+        <StackPanel Grid.Row="4"
+                    Margin="0,18,0,0"
+                    HorizontalAlignment="Right"
+                    Orientation="Horizontal">
+            <Button MinWidth="90"
+                    Content="Cancelar"
+                    IsCancel="True"
+                    Style="{StaticResource PlaylineTextButtonStyle}" />
+            <Button MinWidth="90"
+                    Margin="8,0,0,0"
+                    Content="Salvar"
+                    IsDefault="True"
+                    Style="{StaticResource PlaylineTextButtonStyle}"
+                    automation:AutomationProperties.AutomationId="SaveSettingsButton"
+                    Click="SaveButton_Click" />
+        </StackPanel>
+    </Grid>
+</Window>

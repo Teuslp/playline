@@ -1,0 +1,135 @@
+<Window x:Class="Playline.App.EditGameWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:automation="clr-namespace:System.Windows.Automation;assembly=PresentationCore"
+        Title="Editar jogo"
+        Width="500"
+        Height="420"
+        ResizeMode="NoResize"
+        ShowInTaskbar="False"
+        WindowStartupLocation="CenterOwner"
+        Background="{StaticResource PlaylineWindowBrush}">
+    <Window.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource PlaylineTextBrush}" />
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="Padding" Value="8,6" />
+            <Setter Property="Foreground" Value="{StaticResource PlaylineTextBrush}" />
+            <Setter Property="Background" Value="{StaticResource PlaylineSurfaceBrush}" />
+            <Setter Property="BorderBrush" Value="{StaticResource PlaylineBorderBrush}" />
+            <Setter Property="CaretBrush" Value="{StaticResource PlaylineTextBrush}" />
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Margin="0,0,0,5" Text="Nome" />
+        <TextBox x:Name="NameTextBox"
+                 Grid.Row="1"
+                 Margin="0,0,0,12"
+                 automation:AutomationProperties.Name="Nome do jogo"
+                 automation:AutomationProperties.AutomationId="EditGameName" />
+
+        <StackPanel Grid.Row="2">
+            <TextBlock Margin="0,0,0,5" Text="Executável" />
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBox x:Name="ExecutablePathTextBox"
+                         IsReadOnly="True"
+                         automation:AutomationProperties.Name="Caminho do executável"
+                         automation:AutomationProperties.AutomationId="EditGameExecutable" />
+                <Button Grid.Column="1"
+                        MinWidth="86"
+                        Margin="8,0,0,0"
+                        Content="Procurar…"
+                        Style="{StaticResource PlaylineTextButtonStyle}"
+                        automation:AutomationProperties.AutomationId="BrowseGameExecutableButton"
+                        Click="BrowseExecutableButton_Click" />
+            </Grid>
+            <TextBlock Margin="0,10,0,5" Text="Argumentos" />
+            <TextBox x:Name="ArgumentsTextBox"
+                     automation:AutomationProperties.Name="Argumentos"
+                     automation:AutomationProperties.AutomationId="EditGameArguments" />
+        </StackPanel>
+
+        <StackPanel Grid.Row="3" Margin="0,10,0,0">
+            <TextBlock Margin="0,0,0,5" Text="Diretório de trabalho" />
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBox x:Name="WorkingDirectoryTextBox"
+                         IsReadOnly="True"
+                         automation:AutomationProperties.Name="Diretório de trabalho"
+                         automation:AutomationProperties.AutomationId="EditGameWorkingDirectory" />
+                <Button Grid.Column="1"
+                        MinWidth="86"
+                        Margin="8,0,0,0"
+                        Content="Procurar…"
+                        Style="{StaticResource PlaylineTextButtonStyle}"
+                        automation:AutomationProperties.AutomationId="BrowseWorkingDirectoryButton"
+                        Click="BrowseWorkingDirectoryButton_Click" />
+            </Grid>
+        </StackPanel>
+
+        <StackPanel Grid.Row="4" Margin="0,10,0,0">
+            <TextBlock Margin="0,0,0,5" Text="Ícone (opcional)" />
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBox x:Name="IconPathTextBox"
+                         IsReadOnly="True"
+                         automation:AutomationProperties.Name="Caminho do ícone"
+                         automation:AutomationProperties.AutomationId="EditGameIcon" />
+                <Button Grid.Column="1"
+                        MinWidth="86"
+                        Margin="8,0,0,0"
+                        Content="Procurar…"
+                        Style="{StaticResource PlaylineTextButtonStyle}"
+                        automation:AutomationProperties.AutomationId="BrowseGameIconButton"
+                        Click="BrowseIconButton_Click" />
+                <Button Grid.Column="2"
+                        MinWidth="82"
+                        Margin="4,0,0,0"
+                        Content="Automático"
+                        Style="{StaticResource PlaylineTextButtonStyle}"
+                        automation:AutomationProperties.AutomationId="UseAutomaticGameIconButton"
+                        Click="UseAutomaticIconButton_Click" />
+            </Grid>
+        </StackPanel>
+
+        <StackPanel Grid.Row="6"
+                    Margin="0,18,0,0"
+                    HorizontalAlignment="Right"
+                    Orientation="Horizontal">
+            <Button MinWidth="90"
+                    Content="Cancelar"
+                    IsCancel="True"
+                    Style="{StaticResource PlaylineTextButtonStyle}" />
+            <Button MinWidth="90"
+                    Margin="8,0,0,0"
+                    Content="Salvar"
+                    IsDefault="True"
+                    Style="{StaticResource PlaylineTextButtonStyle}"
+                    automation:AutomationProperties.AutomationId="SaveGameButton"
+                    Click="SaveButton_Click" />
+        </StackPanel>
+    </Grid>
+</Window>

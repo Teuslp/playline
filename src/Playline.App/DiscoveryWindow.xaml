@@ -1,0 +1,102 @@
+<Window x:Class="Playline.App.DiscoveryWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:automation="clr-namespace:System.Windows.Automation;assembly=PresentationCore"
+        Title="Jogos encontrados"
+        Width="480"
+        Height="430"
+        MinWidth="420"
+        MinHeight="320"
+        ShowInTaskbar="False"
+        WindowStartupLocation="CenterOwner"
+        Background="{StaticResource PlaylineWindowBrush}">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock x:Name="StatusText"
+                   Margin="0,0,0,12"
+                   Foreground="{StaticResource PlaylineSecondaryTextBrush}"
+                   FontSize="13"
+                   Text="Procurando jogos..." />
+
+        <Border Grid.Row="1"
+                Background="{StaticResource PlaylineSurfaceBrush}"
+                BorderBrush="{StaticResource PlaylineBorderBrush}"
+                BorderThickness="1"
+                CornerRadius="8">
+            <ListBox x:Name="ResultsList"
+                     Padding="8"
+                     Background="Transparent"
+                     BorderThickness="0"
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                     automation:AutomationProperties.AutomationId="DiscoveryResults">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <CheckBox Margin="4,5"
+                                  IsChecked="{Binding IsSelected, Mode=TwoWay}"
+                                  IsEnabled="{Binding CanAdd}">
+                            <Grid Margin="6,0,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="38" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <Border Width="34"
+                                        Height="34"
+                                        Background="{StaticResource PlaylineWindowBrush}"
+                                        BorderBrush="{StaticResource PlaylineBorderBrush}"
+                                        BorderThickness="1"
+                                        CornerRadius="7">
+                                    <Grid>
+                                        <TextBlock HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center"
+                                                   Foreground="{StaticResource PlaylineSecondaryTextBrush}"
+                                                   FontWeight="SemiBold"
+                                                   Text="{Binding Initial}" />
+                                        <Image Margin="3"
+                                               Source="{Binding Game.IconPath}"
+                                               Stretch="Uniform" />
+                                    </Grid>
+                                </Border>
+
+                                <StackPanel Grid.Column="1"
+                                            Margin="8,0,0,0"
+                                            VerticalAlignment="Center">
+                                    <TextBlock Foreground="{StaticResource PlaylineTextBrush}"
+                                               FontWeight="SemiBold"
+                                               Text="{Binding Game.Name}" />
+                                    <TextBlock Foreground="{StaticResource PlaylineSecondaryTextBrush}"
+                                               FontSize="11"
+                                               Text="{Binding Description}" />
+                                </StackPanel>
+                            </Grid>
+                        </CheckBox>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Border>
+
+        <StackPanel Grid.Row="2"
+                    Margin="0,16,0,0"
+                    HorizontalAlignment="Right"
+                    Orientation="Horizontal">
+            <Button MinWidth="90"
+                    Content="Cancelar"
+                    IsCancel="True"
+                    Style="{StaticResource PlaylineTextButtonStyle}" />
+            <Button x:Name="AddSelectedButton"
+                    MinWidth="150"
+                    Margin="8,0,0,0"
+                    Content="Adicionar selecionados"
+                    IsEnabled="False"
+                    IsDefault="True"
+                    Style="{StaticResource PlaylineTextButtonStyle}"
+                    automation:AutomationProperties.AutomationId="AddDiscoveredGamesButton"
+                    Click="AddSelectedButton_Click" />
+        </StackPanel>
+    </Grid>
+</Window>
