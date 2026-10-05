@@ -81,6 +81,18 @@
                           automation:AutomationProperties.AutomationId="SettingsBarOrientation" />
             </Grid>
 
+            <Grid Margin="0,10,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="190" />
+                </Grid.ColumnDefinitions>
+                <TextBlock VerticalAlignment="Center" Text="Estilo da barra" />
+                <ComboBox x:Name="BarThemeComboBox"
+                          Grid.Column="1"
+                          automation:AutomationProperties.Name="Estilo da barra"
+                          automation:AutomationProperties.AutomationId="SettingsBarTheme" />
+            </Grid>
+
             <Separator Margin="0,18,0,16"
                        Style="{StaticResource PlaylineSeparatorStyle}" />
 
@@ -90,9 +102,6 @@
                        FontWeight="SemiBold"
                        Text="Comportamento" />
 
-            <CheckBox x:Name="AlwaysOnTopCheckBox"
-                      Content="Manter sempre visível sobre outras janelas"
-                      automation:AutomationProperties.AutomationId="SettingsAlwaysOnTop" />
             <CheckBox x:Name="StartWithWindowsCheckBox"
                       Content="Iniciar com o Windows"
                       automation:AutomationProperties.AutomationId="SettingsStartWithWindows" />

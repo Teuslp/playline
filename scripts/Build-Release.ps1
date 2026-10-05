@@ -1,6 +1,7 @@
 [CmdletBinding()]
 param(
-    [string]$InnoCompiler
+    [string]$InnoCompiler,
+    [switch]$ZipOnly
 )
 
 $ErrorActionPreference = 'Stop'
@@ -32,18 +33,20 @@ if (-not $dotnetCandidates) {
 
 $dotnet = $dotnetCandidates
 
-if ([string]::IsNullOrWhiteSpace($InnoCompiler)) {
-    $innoCandidates = @(
-        (Join-Path $env:LOCALAPPDATA 'Programs\Inno Setup 6\ISCC.exe'),
-        (Join-Path $env:ProgramFiles 'Inno Setup 6\ISCC.exe'),
-        (Join-Path ${env:ProgramFiles(x86)} 'Inno Setup 6\ISCC.exe')
-    ) | Where-Object { Test-Path -LiteralPath $_ }
+if (-not $ZipOnly) {
+    if ([string]::IsNullOrWhiteSpace($InnoCompiler)) {
+        $innoCandidates = @(
+            (Join-Path $env:LOCALAPPDATA 'Programs\Inno Setup 6\ISCC.exe'),
+            (Join-Path $env:ProgramFiles 'Inno Setup 6\ISCC.exe'),
+            (Join-Path ${env:ProgramFiles(x86)} 'Inno Setup 6\ISCC.exe')
+        ) | Where-Object { Test-Path -LiteralPath $_ }
 
-    $InnoCompiler = $innoCandidates | Select-Object -First 1
-}
+        $InnoCompiler = $innoCandidates | Select-Object -First 1
+    }
 
-if ([string]::IsNullOrWhiteSpace($InnoCompiler) -or -not (Test-Path -LiteralPath $InnoCompiler)) {
-    throw 'ISCC.exe não encontrado. Instale o Inno Setup 6 ou informe -InnoCompiler.'
+    if ([string]::IsNullOrWhiteSpace($InnoCompiler) -or -not (Test-Path -LiteralPath $InnoCompiler)) {
+        throw 'ISCC.exe não encontrado. Instale o Inno Setup 6 ou informe -InnoCompiler.'
+    }
 }
 
 if (Test-Path -LiteralPath $artifactsDirectory) {
@@ -69,15 +72,20 @@ if ($symbolFiles) {
 $portableArchive = Join-Path $artifactsDirectory 'Playline-Portable-x64.zip'
 Compress-Archive -Path (Join-Path $publishDirectory '*') -DestinationPath $portableArchive -CompressionLevel Optimal
 
-& $InnoCompiler $installerScript
-if ($LASTEXITCODE -ne 0) { throw 'Falha ao compilar o instalador.' }
+if (-not $ZipOnly) {
+    & $InnoCompiler $installerScript
+    if ($LASTEXITCODE -ne 0) { throw 'Falha ao compilar o instalador.' }
+}
 
 Copy-Item -LiteralPath $releaseNotes -Destination (Join-Path $artifactsDirectory 'release-notes.md')
 
-$deliverables = @(
-    (Join-Path $artifactsDirectory 'Playline-Setup-x64.exe'),
-    $portableArchive
-)
+$deliverables = @($portableArchive)
+if (-not $ZipOnly) {
+    $deliverables = @(
+        (Join-Path $artifactsDirectory 'Playline-Setup-x64.exe'),
+        $portableArchive
+    )
+}
 
 $checksumLines = foreach ($deliverable in $deliverables) {
     $hash = Get-FileHash -LiteralPath $deliverable -Algorithm SHA256

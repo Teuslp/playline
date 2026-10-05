@@ -6,6 +6,7 @@ public sealed record AppSettings
 {
     public bool StartWithWindows { get; init; }
 
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public bool AlwaysOnTop { get; init; }
 
     public GameDisplayMode DisplayMode { get; init; } = GameDisplayMode.Compact;
@@ -13,6 +14,8 @@ public sealed record AppSettings
     public GameItemSize ItemSize { get; init; } = GameItemSize.Medium;
 
     public BarOrientation BarOrientation { get; init; } = global::Playline.Core.Models.BarOrientation.Horizontal;
+
+    public BarTheme BarTheme { get; init; } = global::Playline.Core.Models.BarTheme.Glass;
 
     public AfterLaunchAction AfterLaunchAction { get; init; } = AfterLaunchAction.KeepOpen;
 
@@ -45,6 +48,9 @@ public sealed record AppSettings
         var barOrientation = Enum.IsDefined(BarOrientation)
             ? BarOrientation
             : global::Playline.Core.Models.BarOrientation.Horizontal;
+        var barTheme = Enum.IsDefined(BarTheme)
+            ? BarTheme
+            : global::Playline.Core.Models.BarTheme.Glass;
         var afterLaunchAction = CloseAfterGameLaunch
             ? AfterLaunchAction.Exit
             : Enum.IsDefined(AfterLaunchAction)
@@ -60,7 +66,9 @@ public sealed record AppSettings
             DisplayMode = displayMode,
             ItemSize = itemSize,
             BarOrientation = barOrientation,
+            BarTheme = barTheme,
             AfterLaunchAction = afterLaunchAction,
+            AlwaysOnTop = false,
             RestoreWindowPosition = LockWindowPosition || RestoreWindowPosition,
             WindowX = hasValidPosition ? WindowX : null,
             WindowY = hasValidPosition ? WindowY : null,

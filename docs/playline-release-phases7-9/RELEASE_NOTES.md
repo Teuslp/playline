@@ -1,6 +1,6 @@
-# Playline 0.9.0-beta
+# Playline 0.9.2-beta
 
-Esta é a primeira distribuição instalável do ciclo inicial do Playline para Windows x64.
+Esta atualização consolida o novo visual compacto e os controles de posicionamento do Playline para Windows x64.
 
 ## Destaques
 
@@ -8,18 +8,18 @@ Esta é a primeira distribuição instalável do ciclo inicial do Playline para 
 - Pacote portátil ZIP com o mesmo binário self-contained do instalador.
 - Runtime .NET incluído: não é preciso instalar o .NET separadamente.
 - Descoberta sob demanda de jogos Steam e Epic Games.
-- Imagens dos jogos na barra e na lista de detecção, usando ícones de executáveis e o cache local da Steam.
-- Reparo automático, em lote, de imagens ausentes em bibliotecas já existentes.
+- Capas dos launchers priorizadas e ícones de executáveis extraídos em alta resolução pelo Shell do Windows.
+- Renovação automática do cache antigo de ícones em bibliotecas já existentes.
 - Adição manual por executável ou atalho, favoritos, edição e reordenação.
-- Barra minimalista com largura adaptativa e 90 px no tamanho médio, priorizando a legibilidade das capas.
-- Acrylic real via composição do Windows, com tint azul/lilás, reflexos translúcidos, cards segmentados e divisórias luminosas.
-- Opção persistente de barra horizontal ou vertical; o modo vertical mantém capas de 60 px no tamanho médio.
+- Barra minimalista com largura adaptativa e 68 px no tamanho médio.
+- Vidro neutro quase transparente, sem tint azul/roxo e com cantos suavizados.
+- Opção persistente de barra horizontal ou vertical.
+- Movimento direto pelos três pontos, bloqueio de posição e centralização horizontal no monitor atual.
 - Seletores nativos do Windows para procurar executável, pasta de trabalho e imagem; não é necessário colar caminhos.
 - Configurações de aparência, posição, comportamento pós-abertura e início com o Windows.
 - Recuperação automática de arquivos JSON corrompidos, preservando uma cópia `.bak` para diagnóstico.
 - Logs críticos com rotação e retenção limitadas.
 - Deduplicação indexada para bibliotecas grandes.
-- Dependência visual isolada e leve (`FluentWpfCore` 1.0.6), distribuída com seu aviso de licença MIT.
 
 ## Instalação
 

@@ -31,6 +31,11 @@ public partial class SettingsWindow : Window
             new Option<BarOrientation>(BarOrientation.Horizontal, "Horizontal"),
             new Option<BarOrientation>(BarOrientation.Vertical, "Vertical")
         };
+        BarThemeComboBox.ItemsSource = new[]
+        {
+            new Option<BarTheme>(BarTheme.Glass, "Vidro transparente"),
+            new Option<BarTheme>(BarTheme.IconsOnly, "Somente ícones")
+        };
         AfterLaunchComboBox.ItemsSource = new[]
         {
             new Option<AfterLaunchAction>(AfterLaunchAction.KeepOpen, "Manter aberto"),
@@ -42,8 +47,8 @@ public partial class SettingsWindow : Window
         Select(DisplayModeComboBox, _originalSettings.DisplayMode);
         Select(ItemSizeComboBox, _originalSettings.ItemSize);
         Select(BarOrientationComboBox, _originalSettings.BarOrientation);
+        Select(BarThemeComboBox, _originalSettings.BarTheme);
         Select(AfterLaunchComboBox, _originalSettings.AfterLaunchAction);
-        AlwaysOnTopCheckBox.IsChecked = _originalSettings.AlwaysOnTop;
         StartWithWindowsCheckBox.IsChecked = _originalSettings.StartWithWindows;
         AutoHideCheckBox.IsChecked = _originalSettings.AutoHide;
         RestorePositionCheckBox.IsChecked = _originalSettings.RestoreWindowPosition;
@@ -61,8 +66,9 @@ public partial class SettingsWindow : Window
             DisplayMode = SelectedValue(DisplayModeComboBox, GameDisplayMode.Compact),
             ItemSize = SelectedValue(ItemSizeComboBox, GameItemSize.Medium),
             BarOrientation = SelectedValue(BarOrientationComboBox, BarOrientation.Horizontal),
+            BarTheme = SelectedValue(BarThemeComboBox, BarTheme.Glass),
             AfterLaunchAction = SelectedValue(AfterLaunchComboBox, AfterLaunchAction.KeepOpen),
-            AlwaysOnTop = AlwaysOnTopCheckBox.IsChecked == true,
+            AlwaysOnTop = false,
             StartWithWindows = StartWithWindowsCheckBox.IsChecked == true,
             AutoHide = AutoHideCheckBox.IsChecked == true,
             RestoreWindowPosition = restoreWindowPosition,

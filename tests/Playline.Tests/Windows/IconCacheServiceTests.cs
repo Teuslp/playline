@@ -24,12 +24,40 @@ public sealed class IconCacheServiceTests
         Assert.True(File.Exists(firstPath));
         Assert.Equal(firstWriteTime, File.GetLastWriteTimeUtc(firstPath));
         Assert.Equal(".png", Path.GetExtension(firstPath), ignoreCase: true);
-        Assert.EndsWith("-hq2.png", firstPath, StringComparison.OrdinalIgnoreCase);
+        Assert.EndsWith("-hq3.png", firstPath, StringComparison.OrdinalIgnoreCase);
 
         var png = await File.ReadAllBytesAsync(firstPath);
         var width = BinaryPrimitives.ReadInt32BigEndian(png.AsSpan(16, 4));
         var height = BinaryPrimitives.ReadInt32BigEndian(png.AsSpan(20, 4));
         Assert.True(width >= 128, $"Expected a high-resolution icon, got {width}x{height}.");
         Assert.True(height >= 128, $"Expected a high-resolution icon, got {width}x{height}.");
+    }
+
+    [Fact]
+    public void FindVisibleBounds_IgnoresTransparentCanvasAroundIcon()
+    {
+        const int width = 8;
+        const int height = 7;
+        const int stride = width * 4;
+        var pixels = new byte[stride * height];
+        for (var y = 1; y <= 5; y++)
+        {
+            for (var x = 2; x <= 4; x++)
+            {
+                pixels[(y * stride) + (x * 4) + 3] = 255;
+            }
+        }
+
+        var bounds = IconCacheService.FindVisibleBounds(pixels, width, height, stride);
+
+        Assert.Equal((2, 1, 3, 5), bounds);
+    }
+
+    [Fact]
+    public void FindVisibleBounds_WhenCanvasIsTransparent_ReturnsNull()
+    {
+        var bounds = IconCacheService.FindVisibleBounds(new byte[4 * 4 * 4], 4, 4, 16);
+
+        Assert.Null(bounds);
     }
 }

@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Threading;
 using Microsoft.Win32;
@@ -17,6 +18,7 @@ using Playline.Windows.Games;
 using Playline.Windows.Icons;
 using Playline.Windows.Launching;
 using Playline.Windows.Startup;
+using Playline.Windows.Windowing;
 using Forms = System.Windows.Forms;
 
 namespace Playline.App;
@@ -86,6 +88,8 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 
     public BarOrientation BarOrientation => _settings.BarOrientation;
 
+    public BarTheme BarTheme => _settings.BarTheme;
+
     public void ShowFromTray()
     {
         CancelAutoHide();
@@ -120,6 +124,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
     private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
     {
         Loaded -= MainWindow_Loaded;
+        PlaceAtDesktopLevel();
         if (_positionNeedsSave)
         {
             await PersistWindowPositionAsync();
@@ -498,11 +503,13 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 
     private void ApplySettings(bool restoreSavedPosition)
     {
-        Topmost = _settings.AlwaysOnTop;
+        Topmost = false;
 
         OnPropertyChanged(nameof(DisplayMode));
         OnPropertyChanged(nameof(ItemSize));
         OnPropertyChanged(nameof(BarOrientation));
+        OnPropertyChanged(nameof(BarTheme));
+        ConfigureBarTheme();
         ConfigureBarOrientation();
         UpdateBarDimensions((_developmentGames ?? _gameLibrary.GetGames()).Count);
         UpdatePositionControls();
@@ -525,6 +532,11 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         _positionNeedsSave = restoreSavedPosition
             && _settings.RestoreWindowPosition
             && (_settings.WindowX != position.Left || _settings.WindowY != position.Top);
+
+        if (IsLoaded)
+        {
+            PlaceAtDesktopLevel();
+        }
     }
 
     private static IReadOnlyList<DisplayArea> GetDisplayAreas()
@@ -624,9 +636,30 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         OverflowMenu.VerticalOffset = isVertical ? 0 : 4;
     }
 
+    private void ConfigureBarTheme()
+    {
+        var iconsOnly = _settings.BarTheme == BarTheme.IconsOnly;
+        WindowChrome.Margin = iconsOnly ? new Thickness(0) : new Thickness(5);
+        WindowChrome.Background = iconsOnly
+            ? Brushes.Transparent
+            : (Brush)FindResource("PlaylineWindowBrush");
+        WindowChrome.BorderBrush = iconsOnly
+            ? Brushes.Transparent
+            : (Brush)FindResource("PlaylineBorderBrush");
+        WindowChrome.BorderThickness = iconsOnly ? new Thickness(0) : new Thickness(1);
+        WindowChrome.Effect = iconsOnly
+            ? null
+            : (System.Windows.Media.Effects.Effect)FindResource("PlaylineWindowShadow");
+        GlassEffects.Visibility = iconsOnly ? Visibility.Collapsed : Visibility.Visible;
+        LayoutRoot.Margin = iconsOnly ? new Thickness(2) : new Thickness(6, 4, 6, 4);
+    }
+
     private void UpdateBarDimensions(int gameCount)
     {
         var isVertical = _settings.BarOrientation == global::Playline.Core.Models.BarOrientation.Vertical;
+        var iconsOnly = _settings.BarTheme == BarTheme.IconsOnly;
+        var horizontalFrameSize = iconsOnly ? 4 : 22;
+        var verticalFrameSize = iconsOnly ? 4 : 18;
         var itemWidth = (isVertical, _settings.DisplayMode, _settings.ItemSize) switch
         {
             (true, GameDisplayMode.Name, GameItemSize.Small) => 96,
@@ -678,33 +711,30 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 
         if (isVertical)
         {
-            var targetWidth = gameCount == 0 ? 190 : itemWidth + 22;
+            var targetWidth = gameCount == 0 ? 190 : itemWidth + horizontalFrameSize;
             var desiredHeight = gameCount == 0
                 ? 122
-                : (gameCount * itemHeight) + menuHeight + 26;
+                : (gameCount * itemHeight) + menuHeight + (iconsOnly ? 8 : 26);
+            var minimumHeight = iconsOnly && gameCount > 0 ? 1 : 100;
 
             Width = targetWidth;
-            Height = Math.Clamp(desiredHeight, 100, 500);
+            Height = Math.Clamp(desiredHeight, minimumHeight, 500);
             MinWidth = targetWidth;
             MaxWidth = targetWidth;
-            MinHeight = 100;
+            MinHeight = minimumHeight;
             MaxHeight = 500;
             return;
         }
 
-        var targetHeight = _settings.ItemSize switch
-        {
-            GameItemSize.Small => 58,
-            GameItemSize.Large => 80,
-            _ => 68
-        };
+        var targetHeight = itemHeight + verticalFrameSize;
         var desiredWidth = gameCount == 0
             ? 238
-            : (gameCount * itemWidth) + menuWidth + 22;
+            : (gameCount * itemWidth) + menuWidth + horizontalFrameSize;
+        var minimumWidth = iconsOnly && gameCount > 0 ? 1 : 190;
 
-        Width = Math.Clamp(desiredWidth, 190, 600);
+        Width = Math.Clamp(desiredWidth, minimumWidth, 600);
         Height = targetHeight;
-        MinWidth = 190;
+        MinWidth = minimumWidth;
         MaxWidth = 600;
         MinHeight = targetHeight;
         MaxHeight = targetHeight;
@@ -798,12 +828,22 @@ public partial class MainWindow : Window, INotifyPropertyChanged
     {
         _dialogOpen = false;
         _suppressAutoHide = false;
+        _ = Dispatcher.BeginInvoke(
+            DispatcherPriority.ContextIdle,
+            new Action(PlaceAtDesktopLevel));
     }
 
     private void MainWindow_Activated(object? sender, EventArgs e) => CancelAutoHide();
 
     private void MainWindow_Deactivated(object? sender, EventArgs e)
     {
+        if (!_dialogOpen && IsVisible)
+        {
+            _ = Dispatcher.BeginInvoke(
+                DispatcherPriority.ContextIdle,
+                new Action(PlaceAtDesktopLevel));
+        }
+
         if (!_settings.AutoHide || _suppressAutoHide || _dialogOpen || HasOpenContextMenu() || !IsVisible)
         {
             return;
@@ -925,6 +965,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         {
             DragMove();
             await PersistWindowPositionAsync();
+            PlaceAtDesktopLevel();
         }
         catch (InvalidOperationException)
         {
@@ -996,6 +1037,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         Left = position.Left;
         Top = position.Top;
         await PersistWindowPositionAsync();
+        PlaceAtDesktopLevel();
         ShowStatus("Barra centralizada no monitor.");
     }
 
@@ -1107,6 +1149,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         {
             DragMove();
             await PersistWindowPositionAsync();
+            PlaceAtDesktopLevel();
         }
         catch (InvalidOperationException)
         {
@@ -1131,6 +1174,21 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         }
 
         return false;
+    }
+
+    private void PlaceAtDesktopLevel()
+    {
+        if (!IsLoaded || !IsVisible || _dialogOpen || HasOpenContextMenu())
+        {
+            return;
+        }
+
+        Topmost = false;
+        var windowHandle = new WindowInteropHelper(this).Handle;
+        if (windowHandle != IntPtr.Zero)
+        {
+            _ = DesktopWindowLevelService.PlaceImmediatelyAboveDesktop(windowHandle);
+        }
     }
 
     private void OnPropertyChanged([CallerMemberName] string? propertyName = null)

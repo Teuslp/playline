@@ -1,19 +1,19 @@
 # Playline
 
-O Playline é uma barra minimalista para organizar e iniciar jogos no Windows. A versão atual é a `0.9.0-beta`, primeira distribuição instalável do ciclo inicial.
+O Playline é uma barra minimalista para organizar e iniciar jogos no Windows. A versão atual é a `0.9.2-beta`.
 
 ## Interface
 
 - Barra compacta, sem moldura, com tamanho adaptativo e orientação horizontal ou vertical.
-- Alturas pequena, média e grande de 72, 90 e 108 px.
+- Alturas pequena, média e grande de 58, 68 e 80 px.
 - Imagens dos jogos na barra e na lista de detecção.
-- Reparo automático de imagens ausentes usando o ícone do executável ou o cache local da Steam.
+- Capas dos launchers priorizadas e ícones de executáveis extraídos em alta resolução pelo Shell do Windows.
 - Modos somente imagem e imagem + nome.
-- Acrylic real composto pelo Windows, com tint azul profundo, reflexos lilás/azul-gelo e borda luminosa.
-- Capas maiores em cards arredondados, segmentos separados e menu com três pontos circulares.
+- Vidro neutro quase transparente, com contorno arredondado suave e sem tint azul/roxo.
+- Capas em alta qualidade, segmentos discretos e menu com três pontos circulares.
 - Modo vertical com a mesma escala legível de capas do layout horizontal.
 - Dropdowns escuros e legíveis, com seleção e foco consistentes com o restante da interface.
-- Uma única dependência visual pequena (`FluentWpfCore`); nenhuma animação contínua ou processo auxiliar.
+- Sem dependência visual externa, animação contínua ou processo auxiliar.
 
 ## Recursos
 
@@ -21,6 +21,7 @@ O Playline é uma barra minimalista para organizar e iniciar jogos no Windows. A
 - Seletores nativos para executável, diretório de trabalho e imagem durante a edição.
 - Detecção sob demanda de bibliotecas Steam e manifests da Epic Games.
 - Favoritos, edição, remoção e reordenação por arrastar ou pelo menu.
+- Movimento direto pelos três pontos, posição fixa e centralização horizontal por monitor.
 - Configurações de tamanho, modo de exibição, orientação, posição, `AlwaysOnTop`, auto-hide e ação pós-abertura.
 - Inicialização opcional com o Windows por usuário e ícone na área de notificação.
 - Navegação por teclado, nomes acessíveis, tooltips e feedback não bloqueante.

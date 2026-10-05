@@ -49,11 +49,11 @@ public sealed class JsonSettingsRepositoryTests
         var repository = new JsonSettingsRepository(paths, new RecordingLogger());
         var expected = new AppSettings
         {
-            AlwaysOnTop = true,
             StartWithWindows = true,
             DisplayMode = GameDisplayMode.Name,
             ItemSize = GameItemSize.Large,
             BarOrientation = BarOrientation.Vertical,
+            BarTheme = BarTheme.IconsOnly,
             AfterLaunchAction = AfterLaunchAction.Hide,
             AutoHide = true,
             RestoreWindowPosition = true,
@@ -91,7 +91,7 @@ public sealed class JsonSettingsRepositoryTests
         var settings = await repository.LoadAsync();
 
         Assert.True(settings.StartWithWindows);
-        Assert.True(settings.AlwaysOnTop);
+        Assert.False(settings.AlwaysOnTop);
         Assert.Equal(GameItemSize.Large, settings.ItemSize);
         Assert.Equal(AfterLaunchAction.Exit, settings.AfterLaunchAction);
         Assert.False(settings.CloseAfterGameLaunch);
@@ -99,6 +99,7 @@ public sealed class JsonSettingsRepositoryTests
         var migratedJson = await File.ReadAllTextAsync(paths.SettingsFile);
         Assert.DoesNotContain("closeAfterGameLaunch", migratedJson, StringComparison.OrdinalIgnoreCase);
         Assert.DoesNotContain("iconSize", migratedJson, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("alwaysOnTop", migratedJson, StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]
@@ -114,6 +115,7 @@ public sealed class JsonSettingsRepositoryTests
               "displayMode": "FutureMode",
               "itemSize": "Enormous",
               "barOrientation": "Diagonal",
+              "barTheme": "Invisible",
               "afterLaunchAction": "Teleport",
               "windowX": 42
             }
@@ -126,6 +128,7 @@ public sealed class JsonSettingsRepositoryTests
         Assert.Equal(GameDisplayMode.Compact, settings.DisplayMode);
         Assert.Equal(GameItemSize.Medium, settings.ItemSize);
         Assert.Equal(BarOrientation.Horizontal, settings.BarOrientation);
+        Assert.Equal(BarTheme.Glass, settings.BarTheme);
         Assert.Equal(AfterLaunchAction.KeepOpen, settings.AfterLaunchAction);
         Assert.Null(settings.WindowX);
         Assert.Null(settings.WindowY);

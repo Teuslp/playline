@@ -4,6 +4,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Windows;
 using System.Windows.Interop;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 namespace Playline.Windows.Icons;
@@ -17,7 +18,7 @@ public sealed class IconCacheService(string iconsDirectory)
     private const uint ImageListDrawTransparent = 0x1;
     private const uint CoinitMultithreaded = 0x0;
     private const int RpcChangedMode = unchecked((int)0x80010106);
-    private const string CacheVersionSuffix = "-hq2.png";
+    private const string CacheVersionSuffix = "-hq3.png";
     private static readonly Guid ImageListInterfaceId = new("46EB5926-582E-4017-9FDF-E8998DAA0950");
 
     public Task<string?> GetOrCreateAsync(
@@ -125,10 +126,11 @@ public sealed class IconCacheService(string iconsDirectory)
                 fileInfo.IconHandle,
                 Int32Rect.Empty,
                 BitmapSizeOptions.FromEmptyOptions());
-            image.Freeze();
+            var normalizedImage = CropTransparentPadding(image);
+            normalizedImage.Freeze();
 
             var encoder = new PngBitmapEncoder();
-            encoder.Frames.Add(BitmapFrame.Create(image));
+            encoder.Frames.Add(BitmapFrame.Create(normalizedImage));
 
             using (var stream = new FileStream(
                        temporaryPath,
@@ -180,6 +182,84 @@ public sealed class IconCacheService(string iconsDirectory)
     {
         var hash = SHA256.HashData(Encoding.UTF8.GetBytes(value));
         return Convert.ToHexString(hash).ToLowerInvariant();
+    }
+
+    private static BitmapSource CropTransparentPadding(BitmapSource source)
+    {
+        BitmapSource readableSource = source;
+        if (source.Format != PixelFormats.Bgra32)
+        {
+            var converted = new FormatConvertedBitmap(source, PixelFormats.Bgra32, null, 0);
+            converted.Freeze();
+            readableSource = converted;
+        }
+
+        var stride = checked(readableSource.PixelWidth * 4);
+        var pixels = new byte[checked(stride * readableSource.PixelHeight)];
+        readableSource.CopyPixels(pixels, stride, 0);
+        var bounds = FindVisibleBounds(
+            pixels,
+            readableSource.PixelWidth,
+            readableSource.PixelHeight,
+            stride);
+        if (bounds is not { } visibleBounds)
+        {
+            return readableSource;
+        }
+
+        var left = Math.Max(0, visibleBounds.X - 1);
+        var top = Math.Max(0, visibleBounds.Y - 1);
+        var right = Math.Min(readableSource.PixelWidth, visibleBounds.X + visibleBounds.Width + 1);
+        var bottom = Math.Min(readableSource.PixelHeight, visibleBounds.Y + visibleBounds.Height + 1);
+        if (left == 0
+            && top == 0
+            && right == readableSource.PixelWidth
+            && bottom == readableSource.PixelHeight)
+        {
+            return readableSource;
+        }
+
+        return new CroppedBitmap(
+            readableSource,
+            new Int32Rect(left, top, right - left, bottom - top));
+    }
+
+    internal static (int X, int Y, int Width, int Height)? FindVisibleBounds(
+        byte[] pixels,
+        int width,
+        int height,
+        int stride)
+    {
+        ArgumentNullException.ThrowIfNull(pixels);
+        if (width <= 0 || height <= 0 || stride < width * 4 || pixels.Length < stride * height)
+        {
+            throw new ArgumentOutOfRangeException(nameof(pixels));
+        }
+
+        var minimumX = width;
+        var minimumY = height;
+        var maximumX = -1;
+        var maximumY = -1;
+        for (var y = 0; y < height; y++)
+        {
+            for (var x = 0; x < width; x++)
+            {
+                const byte minimumVisibleAlpha = 8;
+                if (pixels[(y * stride) + (x * 4) + 3] <= minimumVisibleAlpha)
+                {
+                    continue;
+                }
+
+                minimumX = Math.Min(minimumX, x);
+                minimumY = Math.Min(minimumY, y);
+                maximumX = Math.Max(maximumX, x);
+                maximumY = Math.Max(maximumY, y);
+            }
+        }
+
+        return maximumX < 0
+            ? null
+            : (minimumX, minimumY, maximumX - minimumX + 1, maximumY - minimumY + 1);
     }
 
     [DllImport("shell32.dll", EntryPoint = "SHGetFileInfoW", CharSet = CharSet.Unicode)]

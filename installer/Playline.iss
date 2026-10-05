@@ -1,5 +1,5 @@
 #define MyAppName "Playline"
-#define MyAppVersion "0.9.0-beta"
+#define MyAppVersion "0.9.2-beta"
 #define MyAppPublisher "Playline contributors"
 #define MyAppExeName "Playline.exe"
 
@@ -25,11 +25,11 @@ WizardStyle=modern
 CloseApplications=yes
 RestartApplications=no
 ChangesAssociations=no
-VersionInfoVersion=0.9.0.0
+VersionInfoVersion=0.9.2.0
 VersionInfoCompany={#MyAppPublisher}
 VersionInfoDescription=Instalador do {#MyAppName}
 VersionInfoProductName={#MyAppName}
-VersionInfoProductVersion=0.9.0.0
+VersionInfoProductVersion=0.9.2.0
 
 [Languages]
 Name: "brazilianportuguese"; MessagesFile: "compiler:Languages\BrazilianPortuguese.isl"

@@ -22,6 +22,12 @@
         UseLayoutRounding="True"
         PreviewKeyDown="Window_PreviewKeyDown">
     <Window.Resources>
+        <DropShadowEffect x:Key="PlaylineWindowShadow"
+                          BlurRadius="9"
+                          Direction="270"
+                          Opacity="0.34"
+                          ShadowDepth="1"
+                          Color="#FF000000" />
         <ItemsPanelTemplate x:Key="HorizontalGamesPanel">
             <StackPanel Orientation="Horizontal" />
         </ItemsPanelTemplate>
@@ -37,37 +43,30 @@
             BorderBrush="{StaticResource PlaylineBorderBrush}"
             BorderThickness="1"
             CornerRadius="14"
+            Effect="{StaticResource PlaylineWindowShadow}"
             MouseLeftButtonDown="WindowChrome_MouseLeftButtonDown"
             SnapsToDevicePixels="False">
-        <Border.Effect>
-            <DropShadowEffect BlurRadius="9"
-                              Direction="270"
-                              Opacity="0.34"
-                              ShadowDepth="1"
-                              Color="#FF000000" />
-        </Border.Effect>
         <Grid>
-            <Border Margin="1"
-                    Background="{StaticResource PlaylineDiagonalSheenBrush}"
-                    CornerRadius="13"
-                    IsHitTestVisible="False"
-                    Opacity="0.58" />
-            <Border Margin="1"
-                    Background="{StaticResource PlaylinePanelSheenBrush}"
-                    CornerRadius="13"
-                    IsHitTestVisible="False"
-                    Opacity="0.48" />
-            <Border Margin="1"
-                    Background="{StaticResource PlaylineGlassGlowBrush}"
-                    BorderBrush="{StaticResource PlaylineInnerBorderBrush}"
-                    BorderThickness="1,1,0,0"
-                    CornerRadius="13"
-                    IsHitTestVisible="False" />
-            <Border Margin="1"
-                    BorderBrush="{StaticResource PlaylineLowerRimBrush}"
-                    BorderThickness="0,0,1,1"
-                    CornerRadius="13"
-                    IsHitTestVisible="False" />
+            <Grid x:Name="GlassEffects"
+                  IsHitTestVisible="False">
+                <Border Margin="1"
+                        Background="{StaticResource PlaylineDiagonalSheenBrush}"
+                        CornerRadius="13"
+                        Opacity="0.58" />
+                <Border Margin="1"
+                        Background="{StaticResource PlaylinePanelSheenBrush}"
+                        CornerRadius="13"
+                        Opacity="0.48" />
+                <Border Margin="1"
+                        Background="{StaticResource PlaylineGlassGlowBrush}"
+                        BorderBrush="{StaticResource PlaylineInnerBorderBrush}"
+                        BorderThickness="1,1,0,0"
+                        CornerRadius="13" />
+                <Border Margin="1"
+                        BorderBrush="{StaticResource PlaylineLowerRimBrush}"
+                        BorderThickness="0,0,1,1"
+                        CornerRadius="13" />
+            </Grid>
 
             <Grid x:Name="LayoutRoot"
                   Margin="6,4"
